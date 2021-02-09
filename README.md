@@ -1,35 +1,30 @@
 ## 简答题
 ### 请简述 Vue 首次渲染的过程。
-1. Vue初始化，实例成员，静态成员
-2. new Vue()
-3. this._init()
-4. vm.$mount
-	-  这是``/platforms/web/entry-runtime-with-compiler.js``的$mount, 这个函数的核心作用是帮我们把模板编译成`render`函数
-	- 如果没有传递`render`，把模板编译成`render`函数
-	- `compileToFunction()`生成`render()`渲染函数
-	- `options.render = render`
-5. vm.$mount
-	- 这个是`/platforms/web/runtime/ind ex.js`中的$mount
-	- 调用`mountComponent()`
-6. mountComponent(this,el)
-   - `/core/instance/lifecycle.js`中定义
-   -  判断是否有`render`选项, 如果没有但是传入了模板，并且当前是开发环境会发出警告
-   - 触发`beforeMount`
-   - 定义 `updateComponent`
-   		- `vm._update(vm.render(), ... )`
-   		- `vm.render()`渲染，渲染虚拟`DOM`
-   		- ` vm._update()`更新，将虚拟`DOM`转换成真实`DOM `
-   - 创建`Watcher`实例
-   		- 传入了`updateComponent方法`
-   		- 调用`get()`方法
-   - 触发`mounted`
-   - `return vm`
-7. watcher.get()
-  	- 创建完`watcher`会调用一次`get`
-  	- 调用`updateComponent()`
-  	- 调用 `vm.render()`创建VNode
-  	- 调用 `vm._update(vnode, ...)` 
-
+1. Vue首次渲染的时候会先去调用this._init(),这个方法里面会调用this.$mount()方法把模板编译成render函数
+2. this.$mount在`/platforms/web/entry-runtime-with-compiler.js`中定义
+   - 这个函数会调用compileToFunctions把template编译成render
+   - 之后去执行`/platforms/web/runtime/index.js`里面的vm.$mount
+3. vm.$mount
+   - 这个函数主要是执行`mountComponent`去渲染模板
+   
+Vue首次渲染的时候先去调用`vm._init()`方法，然后去执行两个实例方法`vm.$mount`，这两个`$mount`在不同的地方定义，一个作用是将模板编译成render函数，一个是渲染模板
+- vm.$mount
+   - `/platforms/web/entry-runtime-with-compiler.js`中定义
+   - 核心作用是调用了`compileToFunctions`将模板编译成render函数
+- vm.$mount
+   - 在`/platform/web/runtiem/index.js`中重写了`$mount`方法
+   - 之后去执行`mountComponent`去渲染模板
+   - `mountComponent`
+     - 这函数在`core/instance/lifecycle.js`中定义
+     - 首先判断是否传入了render选项，如果没传开发环境会报警告
+     - 触发beforMount
+     - 定义updateComponent方法
+     - 创建Watcher对象，传入updateComponent方法(创建Watcher的时候，会触发一次get方法)
+     	- get()方法中调用了updateComponent
+	- 显示调用了里面作为参数的vm.render()
+	- vm._update(),将虚拟dom转成真实dom,并更新到视图上
+     - 触发mounted钩子函数，返回vm
+     
 ### 请简述 Vue 响应式原理。
 ### 请简述虚拟 DOM 中 Key 的作用和好处。
 ### 请简述 Vue 中模板编译的过程。
