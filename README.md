@@ -19,10 +19,10 @@ Vue首次渲染的时候先去调用`vm._init()`方法，然后去执行两个�
      - 首先判断是否传入了render选项，如果没传开发环境会报警告
      - 触发beforMount
      - 定义updateComponent方法
-     - 创建Watcher对象，传入updateComponent方法(创建Watcher的时候，会触发一次get方法)
-     	- get()方法中调用了updateComponent
-	- 显示调用了里面作为参数的vm.render()
-	- vm._update(),将虚拟dom转成真实dom,并更新到视图上
+     - 创建Watcher对象，传入updateComponent方法(创建Watcher的时候，会触发一次get方法）
+       1.get()方法中调用了updateComponent
+       2.然后先是调用了里面作为参数的vm.render()
+       3.之后调用vm._update(),将虚拟dom转成真实dom,并更新到视图上
      - 触发mounted钩子函数，返回vm
      
 ### 请简述 Vue 响应式原理。
