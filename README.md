@@ -34,6 +34,9 @@ Vue首次渲染的时候先去调用`vm._init()`方法，然后去执行两个�
       3. 在set中调用dep.notify()进行触发更新
   
 ### 请简述虚拟 DOM 中 Key 的作用和好处。
+在diff算法的时候会对比子节点的新旧VNode是否为sameVnode,sameVNode中会对比key和tag标签
+- 如果不设置key,在diff算法的时候，中比较子节点的时候，增加dom操作
+- 如果设置key的话，在对比新旧节点的key相同会被认为是sameVnode,所以只做比较，更新的时候只会做变化部分的dom操作
 ### 请简述 Vue 中模板编译的过程。
 
 
