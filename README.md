@@ -19,6 +19,20 @@ Vue首次渲染的时候先去调用`vm._init()`方法，然后去执行两个�
      - 触发mounted钩子函数，返回vm
      
 ### 请简述 Vue 响应式原理。
+在`this._init()`方法里，会调用`initState()`在这个方法中去初始化实例状态,处理响应式的方法`observer()`在此函数中定义
+- observer()
+  - 在`core/observer/index.js`中定义，核心功能是为数据添加响应式处理
+  - 方法首先会判断传入value是否为对象或者VNode,如果不是直接返回
+  - 然后去判断value.ob是否为Observer实例，并且value.__ob__ 是否为响应式对象，如果是 返回实例
+  - 最后`new Observer(value)`创建Observer对象并返回
+    - Observer类中首先为value的__ob__属性设置为当前实例
+    - 判断value是数组还是对象，分别对数组和对象进行响应式处理
+    - 数组：为数组方法进行修补，改变当前数组对象的原型属性，
+    - 对象：执行`this.walk`遍历对象的每个属性，调用`defineReative(obj,key[i])`方法, 设置响应式数据
+      1. defineReative里面主要的是重写了对象的get/set方法，为get/set增加了依赖收集的方法
+      2. 在get中调用dep.depend()进行收集依赖
+      3. 在set中调用dep.notify()进行触发更新
+  
 ### 请简述虚拟 DOM 中 Key 的作用和好处。
 ### 请简述 Vue 中模板编译的过程。
 
