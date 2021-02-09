@@ -38,5 +38,17 @@ Vue首次渲染的时候先去调用`vm._init()`方法，然后去执行两个�
 - 如果不设置key,在diff算法的时候，中比较子节点的时候，增加dom操作
 - 如果设置key的话，在对比新旧节点的key相同会被认为是sameVnode,所以只做比较，更新的时候只会做变化部分的dom操作
 ### 请简述 Vue 中模板编译的过程。
+模板编译就是把模板转成渲染函数的过程，也就是template到render的过程。模板编译的通过调用`compileToFunctions`函数完成
+- compileToFunctions
+  - 读取缓存中的 CompiledFunctionResult对象，如果有直接返回
+  - 调用compile函数编译模板
+    - compile函数主要的作用是合并options选项，调用baseCompile进行编译
+    - baseCompile是模板编译的核心函数，src/compiler/index.js中定义，主要做了三件事
+      1. 把模板编译成ast 抽象语法树
+      2. 优化语法树
+      3. 把抽象语法树生成字符串形式的 js 代码，并进行返回
+  - 拿到返回的对象后，调用`createFunction`把字符串形式的js代码转成js方法
+  - 缓存并返回res对象(render,staticRenderFns方法)
+
 
 
